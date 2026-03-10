@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.fiap.airaware.ui.telas.HomeScreen
+import br.com.fiap.airaware.ui.telas.ResultsScreen
 import br.com.fiap.airaware.ui.telas.SearchCityScreen
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
 
@@ -22,7 +23,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             AirAwareTheme {
                 //HomeScreen()
-                SearchCityScreen()
+                //SearchCityScreen()
+                ResultsScreen()
             }
         }
     }

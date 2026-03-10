@@ -78,7 +78,7 @@ private fun SearchCityScreenPreview() {
 //Botao voltar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchTopBar(onBackClick: () -> Unit) {
+fun SearchTopBar(onBackClick: () -> Unit, modifier: Modifier = Modifier) {
 
     IconButton(
         onClick = onBackClick,
