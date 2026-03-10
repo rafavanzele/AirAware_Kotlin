@@ -45,7 +45,8 @@ fun ResultsScreen() {
         status = "Moderada",
         pm25 = 18.0,
         pm10 = 30.0,
-        co = 0.8
+        co = 0.8,
+        o3 = 12.0
     )
 
     Box(
@@ -65,7 +66,7 @@ fun ResultsScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center)
-                .padding(24.dp),
+                .padding(48.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 

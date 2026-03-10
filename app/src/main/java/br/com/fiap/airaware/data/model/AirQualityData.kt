@@ -6,5 +6,6 @@ data class AirQualityData(
     val status: String,
     val pm25: Double,
     val pm10: Double,
-    val co: Double
+    val co: Double,
+    val o3: Double
 )
