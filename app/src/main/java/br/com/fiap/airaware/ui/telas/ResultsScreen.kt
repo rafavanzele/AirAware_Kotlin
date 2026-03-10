@@ -190,10 +190,10 @@ fun AirQualityCard(
 ) {
 
     val backgroundColor = when {
-        aqi <= 50 -> Color(0xFF4CAF50)     // Verde
-        aqi <= 100 -> Color(0xFFFFC107)    // Amarelo
-        aqi <= 150 -> Color(0xFFFF9800)    // Laranja
-        else -> Color(0xFFF44336)          // Vermelho
+        aqi <= 50 -> Color(0xFF4CAF50)
+        aqi <= 100 -> Color(0xFFFFC107)
+        aqi <= 150 -> Color(0xFFFF9800)
+        else -> Color(0xFFF44336)
     }
 
     Card(
