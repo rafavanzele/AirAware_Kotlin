@@ -29,15 +29,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
 import br.com.fiap.airaware.ui.telas.SearchTopBar
 
 @Composable
-fun ResultsScreen() {
+fun ResultsScreen(navController: NavHostController) {
 
     val airData = AirQualityData(
         city = "São Paulo",
@@ -58,7 +61,9 @@ fun ResultsScreen() {
     ) {
 
         SearchTopBar(
-            onBackClick = {},
+            onBackClick = {
+                navController.popBackStack()
+            },
             modifier = Modifier.align(Alignment.TopStart)
         )
 
@@ -84,7 +89,7 @@ fun ResultsScreen() {
 @Composable
 private fun ResultsScreenPreview() {
     AirAwareTheme() {
-        ResultsScreen()
+        ResultsScreen(NavHostController(LocalContext.current))
     }
 }
 
@@ -145,7 +150,8 @@ private fun ResultsTitlePreview() {
 //Results components
 @Composable
 fun AirQualitySection(
-    data: AirQualityData
+    data: AirQualityData,
+
 ) {
 
     Column(

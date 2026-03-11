@@ -21,16 +21,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import br.com.fiap.airaware.R
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
 
     Box(
         modifier = Modifier
@@ -105,7 +108,9 @@ fun HomeScreen() {
 
             //botao
             Button(
-                onClick = {},
+                onClick = {
+                    navController.navigate("searchScreen")
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -130,6 +135,6 @@ fun HomeScreen() {
 @Composable
 private fun HomeScreenPreview() {
     AirAwareTheme() {
-        HomeScreen()
+        HomeScreen(NavHostController(LocalContext.current))
     }
 }

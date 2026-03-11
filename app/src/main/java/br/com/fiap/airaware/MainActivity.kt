@@ -11,6 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import br.com.fiap.airaware.ui.telas.DetailsScreen
 import br.com.fiap.airaware.ui.telas.EnvironmentalTipsScreen
 import br.com.fiap.airaware.ui.telas.HomeScreen
@@ -28,7 +31,22 @@ class MainActivity : ComponentActivity() {
                 //SearchCityScreen()
                 //ResultsScreen()
                 //DetailsScreen()
-                EnvironmentalTipsScreen()
+                //EnvironmentalTipsScreen()
+
+                val navController = rememberNavController()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = "home"
+                ) {
+
+                    composable(route = "home") {HomeScreen(navController)}
+                    composable(route = "searchScreen") {SearchCityScreen(navController)}
+                    composable(route = "resultsScreen") {ResultsScreen(navController)}
+                    composable(route = "detailsScreen") {DetailsScreen()}
+                    composable(route = "environmentalTipsScreen") {EnvironmentalTipsScreen()}
+                }
+
             }
         }
     }

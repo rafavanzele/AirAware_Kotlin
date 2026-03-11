@@ -23,16 +23,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavHostController
 
 
 //SearchScreen
 @Composable
-fun SearchCityScreen() {
+fun SearchCityScreen(navController: NavHostController) {
 
     Scaffold(
         topBar = {
             SearchTopBar(
-                onBackClick = { }
+                onBackClick = {
+                    navController.popBackStack()
+                }
             )
         }
     ) { padding ->
@@ -56,7 +60,7 @@ fun SearchCityScreen() {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                SearchInputSection()
+                SearchInputSection(navController)
 
                 Spacer(modifier = Modifier.height(64.dp))
 
@@ -70,7 +74,7 @@ fun SearchCityScreen() {
 @Composable
 private fun SearchCityScreenPreview() {
     AirAwareTheme() {
-        SearchCityScreen()
+        SearchCityScreen(NavHostController(LocalContext.current))
     }
 }
 
@@ -139,7 +143,7 @@ private fun SearchTitlePreview() {
 
 //Search input
 @Composable
-fun SearchInputSection() {
+fun SearchInputSection(navController: NavHostController) {
     Column() {
 
         var texto by remember { mutableStateOf("") }
@@ -176,7 +180,9 @@ fun SearchInputSection() {
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
-            onClick = {},
+            onClick = {
+                navController.navigate("resultsScreen")
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -196,7 +202,7 @@ fun SearchInputSection() {
 @Composable
 private fun SearchInputSectionPreview() {
     AirAwareTheme() {
-        SearchInputSection()
+        SearchInputSection(NavHostController(LocalContext.current))
     }
 }
 
