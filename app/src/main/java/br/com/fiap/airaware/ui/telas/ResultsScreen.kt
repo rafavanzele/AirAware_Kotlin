@@ -45,11 +45,14 @@ fun ResultsScreen(navController: NavHostController) {
     val airData = AirQualityData(
         city = "São Paulo",
         aqi = 78,
-        status = "Moderada",
+        co = 0.8,
+        no = 0.0,
+        no2 = 0.0,
+        o3 = 12.0,
+        so2 = 0.0,
         pm25 = 18.0,
         pm10 = 30.0,
-        co = 0.8,
-        o3 = 12.0
+        nh3 = 0.0
     )
 
     Box(
@@ -82,6 +85,15 @@ fun ResultsScreen(navController: NavHostController) {
             AirQualitySection(data = airData, navController = navController)
 
         }
+    }
+}
+
+fun getAirQualityStatus(aqi: Int): String {
+    return when {
+        aqi <= 50 -> "Boa"
+        aqi <= 100 -> "Moderada"
+        aqi <= 150 -> "Ruim"
+        else -> "Muito Ruim"
     }
 }
 
@@ -162,7 +174,7 @@ fun AirQualitySection(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        AirQualityCard(data.aqi, status = data.status)
+        AirQualityCard(aqi = data.aqi, status = getAirQualityStatus(data.aqi))
 
         Spacer(modifier = Modifier.height(24.dp))
 

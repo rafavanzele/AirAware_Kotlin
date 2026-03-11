@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
@@ -24,12 +25,18 @@ import androidx.compose.ui.unit.dp
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.navigation.NavHostController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import br.com.fiap.airaware.ui.viewmodel.AirQualityViewModel
 
 
 //SearchScreen
 @Composable
 fun SearchCityScreen(navController: NavHostController) {
+
+    //criando o viewmodel na tela
+    val viewModel: AirQualityViewModel = viewModel()
 
     Scaffold(
         topBar = {
@@ -60,7 +67,7 @@ fun SearchCityScreen(navController: NavHostController) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                SearchInputSection(navController)
+                SearchInputSection(navController, viewModel)
 
                 Spacer(modifier = Modifier.height(64.dp))
 
@@ -143,7 +150,10 @@ private fun SearchTitlePreview() {
 
 //Search input
 @Composable
-fun SearchInputSection(navController: NavHostController) {
+fun SearchInputSection(
+    navController: NavHostController,
+    viewModel: AirQualityViewModel
+    ) {
     Column() {
 
         var texto by remember { mutableStateOf("") }
@@ -159,7 +169,7 @@ fun SearchInputSection(navController: NavHostController) {
             },
             trailingIcon = {
                 IconButton(onClick = {
-                    println("Buscar clicado")
+                    //println("Buscar clicado")
                 }) {
                     Icon(
                         imageVector = Icons.Default.Search,
@@ -167,6 +177,8 @@ fun SearchInputSection(navController: NavHostController) {
                     )
                 }
             },
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
+
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -181,6 +193,7 @@ fun SearchInputSection(navController: NavHostController) {
 
         Button(
             onClick = {
+                viewModel.searchCity(texto)
                 navController.navigate("resultsScreen")
             },
             modifier = Modifier
@@ -198,13 +211,13 @@ fun SearchInputSection(navController: NavHostController) {
     }
 }
 
-@Preview
-@Composable
-private fun SearchInputSectionPreview() {
-    AirAwareTheme() {
-        SearchInputSection(NavHostController(LocalContext.current))
-    }
-}
+//@Preview
+//@Composable
+//private fun SearchInputSectionPreview() {
+//    AirAwareTheme() {
+//        SearchInputSection(NavHostController(LocalContext.current))
+//    }
+//}
 
 
 //Lista de cidades
