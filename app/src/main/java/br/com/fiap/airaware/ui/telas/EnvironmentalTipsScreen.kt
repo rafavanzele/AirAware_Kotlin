@@ -38,9 +38,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
+import br.com.fiap.airaware.ui.viewmodel.AirQualityViewModel
 
 @Composable
-fun EnvironmentalTipsScreen(navController: NavHostController) {
+fun EnvironmentalTipsScreen(navController: NavHostController, viewModel: AirQualityViewModel) {
+
+    val airData = viewModel.airQualityData
+
+    if (airData == null) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Nenhum dado encontrado.",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
+        return
+    }
+
+    val tips = getEnvironmentalTips(airData.aqi)
 
     Box(
         modifier = Modifier
@@ -71,20 +92,20 @@ fun EnvironmentalTipsScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            TipsList()
+            TipsList(tips = tips)
 
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-private fun EnvironmentalTipsScreenPreview() {
-    AirAwareTheme() {
-        EnvironmentalTipsScreen(NavHostController(LocalContext.current))
-    }
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//private fun EnvironmentalTipsScreenPreview() {
+//    AirAwareTheme() {
+//        EnvironmentalTipsScreen(NavHostController(LocalContext.current))
+//    }
+//}
 
 
 //title
@@ -129,43 +150,27 @@ private fun EnvironmentalTipsSubtitlePreview() {
 
 //Tips list
 @Composable
-fun TipsList() {
+fun TipsList(tips: List<String>) {
     Column(
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        EnvironmentalTipCard(
-            icon = Icons.Default.DirectionsBike,
-            iconBackgroundColor = Color(0xFF5FA941),
-            tipText = "Use transporte público, bicicleta ou caminhe mais"
-        )
-
-        EnvironmentalTipCard(
-            icon = Icons.Default.Eco,
-            iconBackgroundColor = Color(0xFF3FA7A3),
-            tipText = "Reduza o uso de veículos e escolha energias renováveis"
-        )
-
-        EnvironmentalTipCard(
-            icon = Icons.Default.LocalFireDepartment,
-            iconBackgroundColor = Color(0xFFF4BE18),
-            tipText = "Reduza o consumo de energia e evite queimadas"
-        )
-
-        EnvironmentalTipCard(
-            icon = Icons.Default.Forest,
-            iconBackgroundColor = Color(0xFF7CB342),
-            tipText = "Plante árvores e apoie áreas verdes"
-        )
+        tips.forEach { tip ->
+            EnvironmentalTipCard(
+                icon = Icons.Default.Eco,
+                iconBackgroundColor = Color(0xFF5FA941),
+                tipText = tip
+            )
+        }
     }
 }
 
-@Preview
-@Composable
-private fun TipsListPreview() {
-    AirAwareTheme() {
-        TipsList()
-    }
-}
+//@Preview
+//@Composable
+//private fun TipsListPreview() {
+//    AirAwareTheme() {
+//        TipsList()
+//    }
+//}
 
 //tips card
 @Composable
@@ -231,7 +236,39 @@ private fun EnvironmentalTipCardPreview() {
 }
 
 
-
+//lista de dicas
+fun getEnvironmentalTips(aqi: Int): List<String> {
+    return when (aqi) {
+        1 -> listOf(
+            "A qualidade do ar está boa.",
+            "Aproveite para caminhar ao ar livre.",
+            "Mantenha hábitos sustentáveis no dia a dia."
+        )
+        2 -> listOf(
+            "A qualidade do ar está razoável.",
+            "Pessoas mais sensíveis podem evitar longos períodos ao ar livre.",
+            "Prefira transporte coletivo ou bicicleta sempre que possível."
+        )
+        3 -> listOf(
+            "A qualidade do ar está moderada.",
+            "Evite atividades físicas intensas ao ar livre.",
+            "Mantenha os ambientes ventilados quando possível."
+        )
+        4 -> listOf(
+            "A qualidade do ar está ruim.",
+            "Reduza exposição prolongada em áreas externas.",
+            "Se possível, use máscara em locais com muita poluição."
+        )
+        5 -> listOf(
+            "A qualidade do ar está muito ruim.",
+            "Evite sair de casa por longos períodos sem necessidade.",
+            "Grupos sensíveis devem redobrar os cuidados."
+        )
+        else -> listOf(
+            "Não foi possível determinar recomendações no momento."
+        )
+    }
+}
 
 
 

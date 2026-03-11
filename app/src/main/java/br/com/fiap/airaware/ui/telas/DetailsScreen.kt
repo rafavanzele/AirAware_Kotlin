@@ -22,17 +22,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
+import br.com.fiap.airaware.ui.viewmodel.AirQualityViewModel
 
 @Composable
-fun DetailsScreen(navController: NavHostController) {
+fun DetailsScreen(navController: NavHostController, viewModel: AirQualityViewModel) {
+
+    val airData = viewModel.airQualityData
+
+    if (airData == null) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Nenhum dado encontrado.",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
+        return
+    }
 
     Box(
         modifier = Modifier
@@ -57,15 +74,15 @@ fun DetailsScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            DetailsSubtitle(city = "São Paulo")
+            DetailsSubtitle(city = airData.city)
 
             Spacer(modifier = Modifier.height(32.dp))
 
             PollutantsCard(
-                pm25 = 18.0,
-                pm10 = 30.0,
-                co = 0.8,
-                o3 = 12.0
+                pm25 = airData.pm25,
+                pm10 = airData.pm10,
+                co = airData.co,
+                o3 = airData.o3
             )
 
             Spacer(modifier = Modifier.height(48.dp))
@@ -76,13 +93,13 @@ fun DetailsScreen(navController: NavHostController) {
 
 }
 
-@Preview(showSystemUi = true)
-@Composable
-private fun DetailsScreenPreview() {
-    AirAwareTheme() {
-        DetailsScreen(NavHostController(LocalContext.current))
-    }
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//private fun DetailsScreenPreview() {
+//    AirAwareTheme() {
+//        DetailsScreen(NavHostController(LocalContext.current))
+//    }
+//}
 
 
 //Detail title
@@ -269,13 +286,13 @@ fun DetailsTipsButton(navController: NavHostController) {
     }
 }
 
-@Preview
-@Composable
-private fun DetailsTipsButtonPreview() {
-    AirAwareTheme() {
-        DetailsTipsButton(NavHostController(LocalContext.current))
-    }
-}
+//@Preview
+//@Composable
+//private fun DetailsTipsButtonPreview() {
+//    AirAwareTheme() {
+//        DetailsTipsButton(NavHostController(LocalContext.current))
+//    }
+//}
 
 
 

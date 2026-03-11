@@ -20,35 +20,58 @@ import br.com.fiap.airaware.ui.telas.HomeScreen
 import br.com.fiap.airaware.ui.telas.ResultsScreen
 import br.com.fiap.airaware.ui.telas.SearchCityScreen
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import br.com.fiap.airaware.ui.viewmodel.AirQualityViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
+
         setContent {
             AirAwareTheme {
-                //HomeScreen()
-                //SearchCityScreen()
-                //ResultsScreen()
-                //DetailsScreen()
-                //EnvironmentalTipsScreen()
 
                 val navController = rememberNavController()
+
+                val airQualityViewModel: AirQualityViewModel = viewModel()
 
                 NavHost(
                     navController = navController,
                     startDestination = "home"
                 ) {
 
-                    composable(route = "home") {HomeScreen(navController)}
-                    composable(route = "searchScreen") {SearchCityScreen(navController)}
-                    composable(route = "resultsScreen") {ResultsScreen(navController)}
-                    composable(route = "detailsScreen") {DetailsScreen(navController)}
-                    composable(route = "environmentalTipsScreen") {EnvironmentalTipsScreen(navController)}
-                }
+                    composable(route = "home") {
+                        HomeScreen(navController)
+                    }
 
+                    composable(route = "searchScreen") {
+                        SearchCityScreen(
+                            navController = navController,
+                            viewModel = airQualityViewModel
+                        )
+                    }
+
+                    composable(route = "resultsScreen") {
+                        ResultsScreen(
+                            navController = navController,
+                            viewModel = airQualityViewModel
+                        )
+                    }
+
+                    composable(route = "detailsScreen") {
+                        DetailsScreen(
+                            navController = navController,
+                            viewModel = airQualityViewModel
+                        )
+                    }
+
+                    composable(route = "environmentalTipsScreen") {
+                        EnvironmentalTipsScreen(
+                            navController = navController,
+                            viewModel = airQualityViewModel
+                        )
+                    }
+                }
             }
         }
     }
 }
-

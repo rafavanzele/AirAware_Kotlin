@@ -38,33 +38,41 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
 import br.com.fiap.airaware.ui.telas.SearchTopBar
+import androidx.lifecycle.viewmodel.compose.viewModel
+import br.com.fiap.airaware.ui.viewmodel.AirQualityViewModel
 
 @Composable
-fun ResultsScreen(navController: NavHostController) {
+fun ResultsScreen(navController: NavHostController, viewModel: AirQualityViewModel) {
 
-    val airData = AirQualityData(
-        city = "São Paulo",
-        aqi = 78,
-        co = 0.8,
-        no = 0.0,
-        no2 = 0.0,
-        o3 = 12.0,
-        so2 = 0.0,
-        pm25 = 18.0,
-        pm10 = 30.0,
-        nh3 = 0.0
-    )
+    val airData = viewModel.airQualityData
+
+    if (airData == null) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Nenhum dado encontrado.",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
+        return
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            //.padding(24.dp),
+        //.padding(24.dp),
 
     ) {
 
         SearchTopBar(
             onBackClick = {
+                viewModel.clearAirQualityData()
                 navController.popBackStack()
             },
             modifier = Modifier.align(Alignment.TopStart)
@@ -89,21 +97,23 @@ fun ResultsScreen(navController: NavHostController) {
 }
 
 fun getAirQualityStatus(aqi: Int): String {
-    return when {
-        aqi <= 50 -> "Boa"
-        aqi <= 100 -> "Moderada"
-        aqi <= 150 -> "Ruim"
-        else -> "Muito Ruim"
+    return when (aqi) {
+        1 -> "Boa"
+        2 -> "Razoável"
+        3 -> "Moderada"
+        4 -> "Ruim"
+        5 -> "Muito Ruim"
+        else -> "Desconhecida"
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-private fun ResultsScreenPreview() {
-    AirAwareTheme() {
-        ResultsScreen(NavHostController(LocalContext.current))
-    }
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//private fun ResultsScreenPreview() {
+//    AirAwareTheme() {
+//        ResultsScreen(NavHostController(LocalContext.current))
+//    }
+//}
 
 
 //Results header
@@ -207,11 +217,13 @@ fun AirQualityCard(
     status: String
 ) {
 
-    val backgroundColor = when {
-        aqi <= 50 -> Color(0xFF4CAF50)
-        aqi <= 100 -> Color(0xFFFFC107)
-        aqi <= 150 -> Color(0xFFFF9800)
-        else -> Color(0xFFF44336)
+    val backgroundColor = when (aqi) {
+        1 -> Color(0xFF4CAF50)
+        2 -> Color(0xFFFFC107)
+        3 -> Color(0xFFFF9800)
+        4 -> Color(0xFFF44336)
+        5 -> Color(0xFF8E24AA)
+        else -> Color.Gray
     }
 
     Card(

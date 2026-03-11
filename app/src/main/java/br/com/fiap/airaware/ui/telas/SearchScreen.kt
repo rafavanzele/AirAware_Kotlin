@@ -1,7 +1,16 @@
 package br.com.fiap.airaware.ui.telas
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,8 +19,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,24 +40,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import br.com.fiap.airaware.ui.theme.AirAwareTheme
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.navigation.NavHostController
-import androidx.lifecycle.viewmodel.compose.viewModel
+import br.com.fiap.airaware.ui.theme.AirAwareTheme
 import br.com.fiap.airaware.ui.viewmodel.AirQualityViewModel
-
 
 //SearchScreen
 @Composable
-fun SearchCityScreen(navController: NavHostController) {
+fun SearchCityScreen(navController: NavHostController, viewModel: AirQualityViewModel) {
 
-    //criando o viewmodel na tela
-    val viewModel: AirQualityViewModel = viewModel()
+    val airData = viewModel.airQualityData
+
+    LaunchedEffect(airData) {
+        if (airData != null) {
+            navController.navigate("resultsScreen")
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -67,33 +89,35 @@ fun SearchCityScreen(navController: NavHostController) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                SearchInputSection(navController, viewModel)
+                SearchInputSection(viewModel)
 
                 Spacer(modifier = Modifier.height(64.dp))
 
-                PopularCitiesList()
+                PopularCitiesList(cidades = viewModel.recentCities)
             }
         }
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-private fun SearchCityScreenPreview() {
-    AirAwareTheme() {
-        SearchCityScreen(NavHostController(LocalContext.current))
-    }
-}
+//@Preview(showSystemUi = true)
+//@Composable
+//private fun SearchCityScreenPreview() {
+//    AirAwareTheme() {
+//        SearchCityScreen(NavHostController(LocalContext.current))
+//    }
+//}
 
 
 //Botao voltar
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchTopBar(onBackClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SearchTopBar(
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
 
     IconButton(
         onClick = onBackClick,
-        modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp)
+        modifier = modifier.padding(vertical = 24.dp, horizontal = 16.dp)
     ) {
         Icon(
             imageVector = Icons.Default.ArrowBack,
@@ -151,9 +175,8 @@ private fun SearchTitlePreview() {
 //Search input
 @Composable
 fun SearchInputSection(
-    navController: NavHostController,
     viewModel: AirQualityViewModel
-    ) {
+) {
     Column() {
 
         var texto by remember { mutableStateOf("") }
@@ -169,7 +192,9 @@ fun SearchInputSection(
             },
             trailingIcon = {
                 IconButton(onClick = {
-                    //println("Buscar clicado")
+                    if (texto.isNotBlank()) {
+                        viewModel.searchCity(texto)
+                    }
                 }) {
                     Icon(
                         imageVector = Icons.Default.Search,
@@ -193,8 +218,9 @@ fun SearchInputSection(
 
         Button(
             onClick = {
-                viewModel.searchCity(texto)
-                navController.navigate("resultsScreen")
+                if (texto.isNotBlank()) {
+                    viewModel.searchCity(texto)
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -222,15 +248,7 @@ fun SearchInputSection(
 
 //Lista de cidades
 @Composable
-fun PopularCitiesList() {
-
-    val cidades = listOf(
-        "São Paulo",
-        "Rio de Janeiro",
-        "Curitiba",
-        "Belo Horizonte",
-        "Porto Alegre"
-    )
+fun PopularCitiesList(cidades: List<String>) {
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -238,32 +256,39 @@ fun PopularCitiesList() {
     ) {
 
         Text(
-            text = "Cidades populares",
+            text = "Últimas cidades pesquisadas",
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.secondary
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
-
-            items(cidades) { cidade -> CityItem(cidade)
-
+        if (cidades.isEmpty()) {
+            Text(
+                text = "Nenhuma cidade pesquisada ainda.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
+                items(cidades) { cidade ->
+                    CityItem(cidade)
+                }
             }
         }
     }
 }
 
-@Preview
-@Composable
-private fun PopularCitiesListPreview() {
-    AirAwareTheme() {
-        PopularCitiesList()
-    }
-}
+//@Preview
+//@Composable
+//private fun PopularCitiesListPreview() {
+//    AirAwareTheme() {
+//        PopularCitiesList()
+//    }
+//}
 
 //City item
 @Composable

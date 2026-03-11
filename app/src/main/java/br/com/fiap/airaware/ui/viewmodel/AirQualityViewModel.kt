@@ -22,6 +22,9 @@ class AirQualityViewModel : ViewModel() {
     var errorMessage by mutableStateOf<String?>(null)
         private set
 
+    var recentCities by mutableStateOf(listOf<String>())
+        private set
+
     fun searchCity(city: String) {
 
         viewModelScope.launch {
@@ -31,7 +34,9 @@ class AirQualityViewModel : ViewModel() {
                 isLoading = true
                 errorMessage = null
 
-                airQualityData = repository.getAirQualityByCity(city)
+                val result = repository.getAirQualityByCity(city)
+                airQualityData = result
+                addRecentCity(result.city)
 
             } catch (e: Exception) {
 
@@ -45,5 +50,16 @@ class AirQualityViewModel : ViewModel() {
 
         }
 
+    }
+
+    private fun addRecentCity(city: String) {
+        recentCities = listOf(city) + recentCities
+            .filterNot { it.equals(city, ignoreCase = true) }
+            .take(5)
+    }
+
+    fun clearAirQualityData() {
+        airQualityData = null
+        errorMessage = null
     }
 }
