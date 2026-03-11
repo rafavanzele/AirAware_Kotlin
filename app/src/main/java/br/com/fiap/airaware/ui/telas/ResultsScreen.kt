@@ -79,7 +79,7 @@ fun ResultsScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            AirQualitySection(data = airData)
+            AirQualitySection(data = airData, navController = navController)
 
         }
     }
@@ -151,7 +151,7 @@ private fun ResultsTitlePreview() {
 @Composable
 fun AirQualitySection(
     data: AirQualityData,
-
+    navController: NavHostController
 ) {
 
     Column(
@@ -166,11 +166,11 @@ fun AirQualitySection(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        ResultsDetailsButton()
+        ResultsDetailsButton(navController)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ResultsTipsButton()
+        ResultsTipsButton(navController)
 
     }
 
@@ -280,9 +280,11 @@ private fun AirQualityIndicatorPreview() {
 
 //BOTOES
 @Composable
-fun ResultsDetailsButton() {
+fun ResultsDetailsButton(navController: NavHostController) {
     Button(
-        onClick = {},
+        onClick = {
+            navController.navigate("detailsScreen")
+        },
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
@@ -301,14 +303,16 @@ fun ResultsDetailsButton() {
 @Composable
 private fun ResultsDetailsButtonPreview() {
     AirAwareTheme() {
-        ResultsDetailsButton()
+        ResultsDetailsButton(NavHostController(LocalContext.current))
     }
 }
 
 @Composable
-fun ResultsTipsButton() {
+fun ResultsTipsButton(navController: NavHostController) {
     Button(
-        onClick = {},
+        onClick = {
+            navController.navigate("environmentalTipsScreen")
+        },
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
@@ -327,7 +331,7 @@ fun ResultsTipsButton() {
 @Composable
 private fun ResultsTipsButtonPreview() {
     AirAwareTheme() {
-        ResultsTipsButton()
+        ResultsTipsButton(NavHostController(LocalContext.current))
     }
 }
 

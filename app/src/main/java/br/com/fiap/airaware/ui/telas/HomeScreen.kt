@@ -44,9 +44,12 @@ fun HomeScreen(navController: NavHostController) {
     ) {
 
         Column(
+
             horizontalAlignment = Alignment.CenterHorizontally,
             //verticalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 48.dp)
         ) {
 
             Spacer(modifier = Modifier.height(52.dp))

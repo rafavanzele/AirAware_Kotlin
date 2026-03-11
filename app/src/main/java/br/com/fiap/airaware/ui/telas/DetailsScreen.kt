@@ -22,14 +22,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
 
 @Composable
-fun DetailsScreen() {
+fun DetailsScreen(navController: NavHostController) {
 
     Box(
         modifier = Modifier
@@ -37,7 +40,9 @@ fun DetailsScreen() {
             .background(MaterialTheme.colorScheme.background)
     ) {
         SearchTopBar(
-            onBackClick = {},
+            onBackClick = {
+                navController.popBackStack()
+            },
             modifier = Modifier.align(Alignment.TopStart)
         )
 
@@ -65,7 +70,7 @@ fun DetailsScreen() {
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            DetailsTipsButton()
+            DetailsTipsButton(navController)
         }
     }
 
@@ -75,7 +80,7 @@ fun DetailsScreen() {
 @Composable
 private fun DetailsScreenPreview() {
     AirAwareTheme() {
-        DetailsScreen()
+        DetailsScreen(NavHostController(LocalContext.current))
     }
 }
 
@@ -245,9 +250,11 @@ private fun PollutantItemPreview() {
 
 //botao dicas
 @Composable
-fun DetailsTipsButton() {
+fun DetailsTipsButton(navController: NavHostController) {
     Button(
-        onClick = {},
+        onClick = {
+            navController.navigate("environmentalTipsScreen")
+        },
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
@@ -266,7 +273,7 @@ fun DetailsTipsButton() {
 @Composable
 private fun DetailsTipsButtonPreview() {
     AirAwareTheme() {
-        DetailsTipsButton()
+        DetailsTipsButton(NavHostController(LocalContext.current))
     }
 }
 

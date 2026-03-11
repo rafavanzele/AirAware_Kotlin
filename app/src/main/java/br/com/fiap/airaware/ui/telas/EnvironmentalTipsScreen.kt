@@ -30,15 +30,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
 
 @Composable
-fun EnvironmentalTipsScreen() {
+fun EnvironmentalTipsScreen(navController: NavHostController) {
 
     Box(
         modifier = Modifier
@@ -47,7 +49,9 @@ fun EnvironmentalTipsScreen() {
     ) {
 
         SearchTopBar(
-            onBackClick = {},
+            onBackClick = {
+                navController.popBackStack()
+            },
             modifier = Modifier.align(Alignment.TopStart)
         )
 
@@ -78,7 +82,7 @@ fun EnvironmentalTipsScreen() {
 @Composable
 private fun EnvironmentalTipsScreenPreview() {
     AirAwareTheme() {
-        EnvironmentalTipsScreen()
+        EnvironmentalTipsScreen(NavHostController(LocalContext.current))
     }
 }
 

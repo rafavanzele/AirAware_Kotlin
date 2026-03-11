@@ -43,8 +43,8 @@ class MainActivity : ComponentActivity() {
                     composable(route = "home") {HomeScreen(navController)}
                     composable(route = "searchScreen") {SearchCityScreen(navController)}
                     composable(route = "resultsScreen") {ResultsScreen(navController)}
-                    composable(route = "detailsScreen") {DetailsScreen()}
-                    composable(route = "environmentalTipsScreen") {EnvironmentalTipsScreen()}
+                    composable(route = "detailsScreen") {DetailsScreen(navController)}
+                    composable(route = "environmentalTipsScreen") {EnvironmentalTipsScreen(navController)}
                 }
 
             }
