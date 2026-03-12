@@ -20,6 +20,8 @@ import androidx.compose.material.icons.filled.DirectionsBike
 import androidx.compose.material.icons.filled.Eco
 import androidx.compose.material.icons.filled.Forest
 import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -93,6 +95,10 @@ fun EnvironmentalTipsScreen(navController: NavHostController, viewModel: AirQual
             Spacer(modifier = Modifier.height(32.dp))
 
             TipsList(tips = tips)
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            NewSearchButton(navController = navController, viewModel = viewModel)
 
             Spacer(modifier = Modifier.height(24.dp))
         }
@@ -266,6 +272,37 @@ fun getEnvironmentalTips(aqi: Int): List<String> {
         )
         else -> listOf(
             "Não foi possível determinar recomendações no momento."
+        )
+    }
+}
+
+//botao de nova busca
+@Composable
+fun NewSearchButton(
+    navController: NavHostController,
+    viewModel: AirQualityViewModel
+) {
+    Button(
+        onClick = {
+            viewModel.clearSearchResult()
+
+            navController.navigate("searchScreen") {
+                popUpTo("searchScreen") {
+                    inclusive = false
+                }
+                launchSingleTop = true
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp),
+        shape = RoundedCornerShape(50.dp),
+        elevation = ButtonDefaults.buttonElevation(8.dp)
+    ) {
+        Text(
+            text = "NOVA BUSCA",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
         )
     }
 }

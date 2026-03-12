@@ -62,4 +62,10 @@ class AirQualityViewModel : ViewModel() {
         airQualityData = null
         errorMessage = null
     }
+
+    fun clearSearchResult() {
+        airQualityData = null
+        errorMessage = null
+        isLoading = false
+    }
 }
