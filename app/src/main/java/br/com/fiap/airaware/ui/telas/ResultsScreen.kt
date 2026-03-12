@@ -1,7 +1,5 @@
 package br.com.fiap.airaware.ui.telas
 
-import br.com.fiap.airaware.data.model.AirQualityData
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,16 +33,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import br.com.fiap.airaware.data.model.AirQualityData
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
-import br.com.fiap.airaware.ui.telas.SearchTopBar
-import androidx.lifecycle.viewmodel.compose.viewModel
 import br.com.fiap.airaware.ui.viewmodel.AirQualityViewModel
+import androidx.activity.compose.BackHandler
 
 @Composable
 fun ResultsScreen(navController: NavHostController, viewModel: AirQualityViewModel) {
 
     val airData = viewModel.airQualityData
+
+    BackHandler {
+        viewModel.clearAirQualityData()
+        navController.popBackStack()
+    }
 
     if (airData == null) {
         Box(

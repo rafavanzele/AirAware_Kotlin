@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import br.com.fiap.airaware.ui.theme.AirAwareTheme
 import br.com.fiap.airaware.ui.viewmodel.AirQualityViewModel
+import androidx.activity.compose.BackHandler
 
 //SearchScreen
 @Composable
@@ -93,7 +94,12 @@ fun SearchCityScreen(navController: NavHostController, viewModel: AirQualityView
 
                 Spacer(modifier = Modifier.height(64.dp))
 
-                PopularCitiesList(cidades = viewModel.recentCities)
+                PopularCitiesList(
+                    cidades = viewModel.recentCities,
+                    onCityClick = { cidade ->
+                        viewModel.searchCity(cidade)
+                    }
+                )
             }
         }
     }
@@ -248,7 +254,10 @@ fun SearchInputSection(
 
 //Lista de cidades
 @Composable
-fun PopularCitiesList(cidades: List<String>) {
+fun PopularCitiesList(
+    cidades: List<String>,
+    onCityClick: (String) -> Unit
+) {
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -275,7 +284,12 @@ fun PopularCitiesList(cidades: List<String>) {
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
                 items(cidades) { cidade ->
-                    CityItem(cidade)
+                    CityItem(
+                        city = cidade,
+                        onClick = {
+                            onCityClick(cidade)
+                        }
+                    )
                 }
             }
         }
@@ -292,9 +306,13 @@ fun PopularCitiesList(cidades: List<String>) {
 
 //City item
 @Composable
-fun CityItem(city: String) {
+fun CityItem(
+    city: String,
+    onClick: () -> Unit
+) {
 
     Card(
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp),
